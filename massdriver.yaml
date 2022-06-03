@@ -1,0 +1,86 @@
+schema: draft-07
+name: gcp-memorystore-redis
+description: "Provisions a low-latency, scalable, secure, and highly available in-memory Redis cluster in GCP."
+ref: github.com/massdriver-cloud/massdriver-bundles
+access: public
+type: bundle
+
+steps:
+  - path: src
+    provisioner: terraform
+
+params:
+  examples:
+    - __name: Development
+      redis_version: "6.x"
+      tier: Single Instance
+      memory_size_gb: 10
+    - __name: Production
+      redis_version: "6.x"
+      tier: Highly Available
+      memory_size_gb: 100
+      read_replicas: 2
+  required:
+    - memory_size_gb
+    - redis_version
+    - tier
+  properties:
+    memory_size_gb:
+      type: integer
+      title: Capacity (GB)
+      description: Memory size of the Redis instance (in GB). Must be an integer between 5 and 300.
+      minimum: 5
+      maximum: 300
+    redis_version:
+      type: string
+      title: Redis Version
+      description: Major Redis version to use
+      enum:
+        - "3.2"
+        - "4.0"
+        - "5.0"
+        - "6.x"
+    tier:
+      type: string
+      title: Tier
+      description: Availability tier.
+      enum:
+        - "Single Instance"
+        - "Highly Available"
+    read_replicas:
+      type: integer
+      title: Read Replicas
+      description: Number of read replicas to provision. Must be an integer between 1 and 5.
+      minimum: 1
+      maximum: 5
+
+connections:
+  required:
+    - gcp_authentication
+    - subnetwork
+  properties:
+    gcp_authentication:
+      $ref: massdriver/gcp-service-account
+    subnetwork:
+      $ref: massdriver/gcp-subnetwork
+
+artifacts:
+  required:
+    - authentication
+  properties:
+    authentication:
+      $ref: massdriver/redis-authentication
+
+# schema-ui.json
+# List of form customizations for params-schema
+ui:
+  ui:order:
+    - "*"
+  ## set top level ui:wiget
+  # secret_key:
+  #    ui:widget: "password"
+  ## Set key in an array of objects
+  # secrets:
+  #   items:
+  #     mdKeyId:
+  #       ui:widget: "hidden"
