@@ -1,6 +1,6 @@
 
 module "apis" {
-  source = "github.com/massdriver-cloud/terraform-google-enable-apis"
+  source = "github.com/massdriver-cloud/terraform-modules//google-enable-apis?ref=9201b9f"
   services = [
     "redis.googleapis.com"
   ]
