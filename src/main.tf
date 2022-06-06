@@ -31,7 +31,16 @@ resource "google_redis_instance" "redis" {
   replica_count      = local.is_highly_available ? var.read_replicas : null
 
   # OSS Redis AUTH
-  auth_enabled = true
+  auth_enabled            = true
+  transit_encryption_mode = SERVER_AUTHENTICATION
+
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to transit_encryption_mode
+      # makes adding this backwards-compat with existing instances
+      transit_encryption_mode,
+    ]
+  }
 
   depends_on = [
     module.apis
