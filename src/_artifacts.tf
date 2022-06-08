@@ -11,6 +11,15 @@ locals {
     port     = google_redis_instance.redis.port
   }
   data_security = {
+    // For applications that share the network with the Redis instance,
+    // no iam block is needed, we can just lean on AUTH for access.
+    // If the cluster or xyz does not share the network, then IAM is needed
+    // for access to the project / istance or network the Redis instance lives.
+    # iam = {
+    #   write = {
+    #     role      = "roles/redis.viewer"
+    #   }
+    # }
   }
 
   specs_cache = {
