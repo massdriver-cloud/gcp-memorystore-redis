@@ -61,7 +61,7 @@ module "database_memory_alarm" {
   source                         = "github.com/massdriver-cloud/terraform-modules//google-monitoring-utilization-threshold?ref=9201b9f"
   md_metadata                    = var.md_metadata
   message                        = "Cloud SQL Postgres ${google_redis_instance.redis.id}: Memory capacity over threshold ${local.threshold_memory * 100}%"
-  alarm_notification_channel_grn = var.subnetwork.data.observability.alarm_notification_channel_grn
+  alarm_notification_channel_grn = var.md_metadata.alarmChannels
 
   alarm_name    = "${google_redis_instance.redis.id}-highMemory"
   metric_type   = local.metrics["memory"].metric
