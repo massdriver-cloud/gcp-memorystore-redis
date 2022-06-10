@@ -21,11 +21,9 @@ locals {
 }
 
 # module "database_cpu_alarm" {
-#   source                         = "github.com/massdriver-cloud/terraform-modules//google-monitoring-utilization-threshold?ref=9201b9f"
-#   md_metadata                    = var.md_metadata
-#   message                        = "Cloud SQL Postgres ${google_redis_instance.redis.id}: CPU Utilization over threshold ${local.threshold_cpu * 100}%"
-#   alarm_notification_channel_grn = var.md_metadata.observability.alarm_channels.gcp.id
-
+#   source        = "github.com/massdriver-cloud/terraform-modules//google-monitoring-utilization-threshold?ref=9201b9f"
+#   md_metadata   = var.md_metadata
+#   message       = "Cloud SQL Postgres ${google_redis_instance.redis.id}: CPU Utilization over threshold ${local.threshold_cpu * 100}%"
 #   alarm_name    = "${google_redis_instance.redis.id}-highCPU"
 #   metric_type   = local.metrics["cpu"].metric
 #   resource_type = local.metrics["cpu"].resource
@@ -40,11 +38,9 @@ locals {
 
 
 # module "database_disk_alarm" {
-#   source                         = "github.com/massdriver-cloud/terraform-modules//google-monitoring-utilization-threshold?ref=9201b9f"
-#   md_metadata                    = var.md_metadata
-#   message                        = "Cloud SQL Postgres ${google_redis_instance.redis.id}: Disk capacity over threshold ${local.threshold_disk * 100}%"
-#   alarm_notification_channel_grn = var.md_metadata.observability.alarm_channels.gcp.id
-
+#   source        = "github.com/massdriver-cloud/terraform-modules//google-monitoring-utilization-threshold?ref=9201b9f"
+#   md_metadata   = var.md_metadata
+#   message       = "Cloud SQL Postgres ${google_redis_instance.redis.id}: Disk capacity over threshold ${local.threshold_disk * 100}%"
 #   alarm_name    = "${google_redis_instance.redis.id}-highDisk"
 #   metric_type   = local.metrics["disk"].metric
 #   resource_type = local.metrics["disk"].resource
@@ -58,11 +54,9 @@ locals {
 # }
 
 module "database_memory_alarm" {
-  source                         = "github.com/massdriver-cloud/terraform-modules//google-monitoring-utilization-threshold?ref=9201b9f"
-  md_metadata                    = var.md_metadata
-  message                        = "Cloud SQL Postgres ${google_redis_instance.redis.id}: Memory capacity over threshold ${local.threshold_memory * 100}%"
-  alarm_notification_channel_grn = var.md_metadata.observability.alarm_channels.gcp.id
-
+  source        = "github.com/massdriver-cloud/terraform-modules//google-monitoring-utilization-threshold?ref=9201b9f"
+  md_metadata   = var.md_metadata
+  message       = "Cloud SQL Postgres ${google_redis_instance.redis.id}: Memory capacity over threshold ${local.threshold_memory * 100}%"
   alarm_name    = "${google_redis_instance.redis.id}-highMemory"
   metric_type   = local.metrics["memory"].metric
   resource_type = local.metrics["memory"].resource
