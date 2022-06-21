@@ -59,9 +59,10 @@ module "alarm_channel" {
 # }
 
 module "database_memory_alarm" {
-  source                  = "github.com/massdriver-cloud/terraform-modules//gcp-monitoring-utilization-threshold?ref=aa08797"
+  source                  = "github.com/massdriver-cloud/terraform-modules//gcp-monitoring-utilization-threshold?ref=8997456"
   notification_channel_id = module.alarm_channel.id
   md_metadata             = var.md_metadata
+  display_name            = "Memory Usage"
   message                 = "Cloud SQL Postgres ${google_redis_instance.redis.id}: Memory capacity over threshold ${local.threshold_memory * 100}%"
   alarm_name              = "${google_redis_instance.redis.id}-highMemory"
   metric_type             = local.metrics["memory"].metric
