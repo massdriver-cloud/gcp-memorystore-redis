@@ -26,7 +26,7 @@ module "alarm_channel" {
 }
 
 # module "database_cpu_alarm" {
-#   source        = "github.com/massdriver-cloud/terraform-modules//gcp-monitoring-utilization-threshold?ref=aa08797"
+#   source        = "github.com/massdriver-cloud/terraform-modules//gcp-monitoring-utilization-threshold?ref=cafdc89"
 #   md_metadata   = var.md_metadata
 #   message       = "Cloud SQL Postgres ${google_redis_instance.redis.id}: CPU Utilization over threshold ${local.threshold_cpu * 100}%"
 #   alarm_name    = "${google_redis_instance.redis.id}-highCPU"
@@ -43,7 +43,7 @@ module "alarm_channel" {
 
 
 # module "database_disk_alarm" {
-#   source        = "github.com/massdriver-cloud/terraform-modules//gcp-monitoring-utilization-threshold?ref=aa08797"
+#   source        = "github.com/massdriver-cloud/terraform-modules//gcp-monitoring-utilization-threshold?ref=cafdc89"
 #   md_metadata   = var.md_metadata
 #   message       = "Cloud SQL Postgres ${google_redis_instance.redis.id}: Disk capacity over threshold ${local.threshold_disk * 100}%"
 #   alarm_name    = "${google_redis_instance.redis.id}-highDisk"
@@ -59,7 +59,7 @@ module "alarm_channel" {
 # }
 
 module "database_memory_alarm" {
-  source                  = "github.com/massdriver-cloud/terraform-modules//gcp-monitoring-utilization-threshold?ref=8997456"
+  source                  = "github.com/massdriver-cloud/terraform-modules//gcp-monitoring-utilization-threshold?ref=cafdc89"
   notification_channel_id = module.alarm_channel.id
   md_metadata             = var.md_metadata
   display_name            = "Memory Usage"
