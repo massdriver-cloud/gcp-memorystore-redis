@@ -5,10 +5,6 @@ ref: github.com/massdriver-cloud/massdriver-bundles
 access: public
 type: bundle
 
-steps:
-  - path: src
-    provisioner: terraform
-
 params:
   examples:
     - __name: Development
@@ -71,16 +67,7 @@ artifacts:
     authentication:
       $ref: massdriver/redis-authentication
 
-# schema-ui.json
-# List of form customizations for params-schema
 ui:
   ui:order:
     - "*"
-  ## set top level ui:wiget
-  # secret_key:
-  #    ui:widget: "password"
-  ## Set key in an array of objects
-  # secrets:
-  #   items:
-  #     mdKeyId:
-  #       ui:widget: "hidden"
+
