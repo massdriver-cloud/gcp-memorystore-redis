@@ -29,7 +29,7 @@ params:
       maximum: 300
     redis_version:
       type: string
-      title: Redis Version
+      title: Version
       description: Major Redis version to use
       enum:
         - "3.2"
@@ -70,4 +70,3 @@ artifacts:
 ui:
   ui:order:
     - "*"
-
