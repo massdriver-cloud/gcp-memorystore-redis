@@ -1,7 +1,7 @@
 schema: draft-07
 name: gcp-memorystore-redis
 description: "Provisions a low-latency, scalable, secure, and highly available in-memory Redis cluster in GCP."
-ref: github.com/massdriver-cloud/gcp-memorystore-redis
+source_url: github.com/massdriver-cloud/gcp-memorystore-redis
 access: public
 type: bundle
 
