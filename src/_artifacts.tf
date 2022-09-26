@@ -9,6 +9,12 @@ locals {
     password = google_redis_instance.redis.auth_string
     hostname = google_redis_instance.redis.host
     port     = google_redis_instance.redis.port
+    certificate = var.tls_enabled ? {
+      cert             = google_redis_instance.redis.server_ca_certs[0].cert
+      create_time      = google_redis_instance.redis.server_ca_certs[0].create_time
+      expiration_time  = google_redis_instance.redis.server_ca_certs[0].expire_time
+      sha1_fingerprint = google_redis_instance.redis.server_ca_certs[0].sha1_fingerprint
+    } : null
   }
 
   specs_cache = {

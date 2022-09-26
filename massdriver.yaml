@@ -49,6 +49,12 @@ params:
       description: Number of read replicas to provision. Must be an integer between 1 and 5.
       minimum: 1
       maximum: 5
+    tls_enabled:
+      type: boolean
+      title: TLS Enabled
+      description: Enable TLS encryption
+      default: true
+      $md.immutable: true
 
 connections:
   required:
