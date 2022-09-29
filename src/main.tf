@@ -32,12 +32,12 @@ resource "google_redis_instance" "redis" {
 
   # OSS Redis AUTH
   auth_enabled            = true
-  transit_encryption_mode = "SERVER_AUTHENTICATION"
+  transit_encryption_mode = "DISABLED"
 
   lifecycle {
     ignore_changes = [
       # Ignore changes to transit_encryption_mode
-      # make adding this backwards-compat with existing instances
+      # Once set, if the MD params change, it won't force a recreate or show up in the plan
       transit_encryption_mode,
     ]
   }
