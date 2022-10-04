@@ -1,47 +1,52 @@
-# Operator Guide for "{type}"
+# Operator Guide for gcp-memorystore-redis
+Memorystore for Redis provides the in-memory application caching of Redis with the reliability and ease of use of a fully managed service. In practice, you gain sub-millisecond speeds when accessing application data from the memory cache. Management is simpler than self-hosting Redis, and you can easily deploy what you need and scale with minimal disruptions.
 
-## TODO:
+## Use Cases 
+Memorystore for Redis is useful for applications that require fast data processing. As a result, it can serve many different use cases.
+### Caching
+By caching query results, Redis can reduce the load on your existing relational or NoSQL database while improving query performance.
+### Session Store
+Redis works exceptionally well as a session store for web applications to manage user authentication and session information, automatically terminating sessions after an appropriate time to live (TTL).
+### Chat and Messaging 
+Redis fully supports the PUB/SUB standard with pattern matching, allowing applications to trigger actions based upon these events and making Redis an excellent choice for chat and messaging applications.
+### Gaming Leaderboards 
+Redis’s “sorted sets” data structure streamlines creating leaderboards.
+### Geospatial 
+Redis offers in-memory data structures that allow applications to manage real-time geographical details such as drive time, drive distance, estimated arrival time, points of interest, and more.
+### Queues
+Redis allows you to build lightweight, persistent queues easily, which is great for applications that require a reliable message broker or circular list.
 
-* [ ] Write a design doc / operator guide
-* [ ] Write bundle code
-  * [ ] Defing params & connections JSON schema
-  * [ ] Write 2-3 Guided Configs
-  * [ ] Define artifact schema, design new artifact definitions if necessary
-  * [ ] Test each guided config
-  * [ ] View params schema in storybook, [write UI schema](https://react-jsonschema-form.readthedocs.io/en/latest/usage/widgets/) for sorting fields, etc
-* [ ] Write user guide
-* [ ] Remove this TODO block
-
-_Brief description of bundle from an operator's point of view_
-
-## Use Cases
-
-_Common use cases for this bundle_
-
-### Guided Configs
-
-_Describe the guided configs_
+## Configuration Presets
+### Development
+A small 10 GB single instance running the latest managed version of Redis 6
+Suitable for development only
+### Production
+Runs the latest managed version of Redis 6 in “highly available” mode
+One primary instance and two read replicas created
 
 ## Design
+### Replication
+If “Highly Available” is selected as the tier for your Redis instance, read replicas will be enabled and cannot be disabled. We allow you to set the number of replicas from one to five, but you are not allowed to run High-Availability Redis without them. The minimum number of one ensures that you will have a primary node and at least one read replica. Please note that instances cannot be provisioned as “Single Instance” and then changed to “Highly Available.” 
+### High Availability
+Memorystore for Redis leverages replication to provide high availability through predictable failover. If the primary node goes down, a replica will automatically be promoted to primary. This action maintains the same IP address and requires no reconfiguration on your part, but you should set up your application to handle losing acknowledged writes during the failover. Please note that Redis uses asynchronous replication to create the read replicas, which can lead to some lag in copying data depending on how busy the primary node is. If you have more than one replica, the replica with the least lag will be promoted during failover.
 
-### How It Works
+## Best Practices
+Below are some of the benefits of Massdriver’s Memorystore for Redis bundle.
+### Automated Maintenance
+Memorystore for Redis handles routine updates automatically, usually without interrupting your service. When necessary, Memorystore will perform maintenance that requires a brief disruption
+### Distribute Replicas
+While you can choose the number of replicas you need, Memorystore for Redis will automatically handle distributing them across the region so your cluster stays available in the event of a partial outage.
 
-_Describe how it works_
+## Security 
+### Auto-Generated Password
+In all cases, we enable authentication by default. Memorystore for Redis will automatically generate a unique 36-character password for each instance. Massdriver exposes this as the password field in the Redis artifact.
+### Encrypted Traffic
+As an additional layer of security, data is encrypted over the wire so that the AUTH string cannot be discovered by others who might have access to the shared private VPC.
 
-#### Best Practices
+## Observability
+The Massdriver Memorystore Redis bundle comes with the following built-in alarms:
+* Memory usage greater than 90%
 
-#### Security
-
-#### Auditing
-
-#### Compliance
-
-#### Observability
-
-### Trade-offs
-
-_List trade offs made with this bundle_
-
-### Permissions
-
-_list IAM permissions required on this bundle._
+## Trade-Offs
+* Redis database snapshots are not currently available in this bundle. They are in preview and will eventually be made available to beta and GA APIs. Once available, Massdriver will add support for them.
+* Clustering is not supported by Cloud Memorystore.
