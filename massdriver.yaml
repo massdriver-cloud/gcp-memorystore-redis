@@ -20,6 +20,7 @@ params:
     - memory_size_gb
     - redis_version
     - tier
+    - read_replicas
   properties:
     memory_size_gb:
       type: integer
@@ -49,6 +50,7 @@ params:
       description: Number of read replicas to provision. Must be an integer between 1 and 5.
       minimum: 1
       maximum: 5
+      default: 1
 
 connections:
   required:
