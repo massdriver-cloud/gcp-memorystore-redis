@@ -8,12 +8,10 @@ type: bundle
 params:
   examples:
     - __name: Development
-      redis_version: "6.x"
-      tier: Single Instance
+      tier: single-instance
       memory_size_gb: 10
     - __name: Production
-      redis_version: "6.x"
-      tier: Highly Available
+      tier: standard-ha
       memory_size_gb: 100
       read_replicas: 2
   required:
@@ -26,12 +24,15 @@ params:
       type: integer
       title: Capacity (GB)
       description: Memory size of the Redis instance (in GB). Must be an integer between 5 and 300.
+      default: 5
       minimum: 5
       maximum: 300
     redis_version:
       type: string
       title: Version
       description: Major Redis version to use
+      default: "6.x"
+      $md.immutable: true
       enum:
         - "3.2"
         - "4.0"
@@ -41,9 +42,13 @@ params:
       type: string
       title: Tier
       description: Availability tier.
-      enum:
-        - "Single Instance"
-        - "Highly Available"
+      default: single-instance
+      $md.immutable: true
+      oneOf:
+      - title: Single Instance
+        const: single-instance
+      - title: Highly Available
+        const: standard-ha
     read_replicas:
       type: integer
       title: Read Replicas
@@ -71,4 +76,8 @@ artifacts:
 
 ui:
   ui:order:
+    - redis_version
+    - memory_size_gb
+    - tier
+    - read_replicas
     - "*"
