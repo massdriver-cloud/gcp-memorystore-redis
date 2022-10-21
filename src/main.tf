@@ -1,5 +1,4 @@
 locals {
-  connect_mode        = true ? "PRIVATE_SERVICE_ACCESS" : "DIRECT_PEERING"
   is_highly_available = var.tier == "STANDARD_HA"
 
   version_map = {
@@ -20,7 +19,7 @@ resource "google_redis_instance" "redis" {
   region = var.subnetwork.specs.gcp.region
 
   authorized_network = var.subnetwork.data.infrastructure.gcp_global_network_grn
-  connect_mode       = local.connect_mode
+  connect_mode       = "PRIVATE_SERVICE_ACCESS"
 
   redis_version = local.version_map[var.redis_version]
   display_name  = var.md_metadata.name_prefix

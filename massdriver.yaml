@@ -18,7 +18,6 @@ params:
     - memory_size_gb
     - redis_version
     - tier
-    - read_replicas
   properties:
     memory_size_gb:
       type: integer
@@ -42,20 +41,37 @@ params:
       type: string
       title: Tier
       description: Availability tier.
-      default: single-instance
+      default: BASIC
       $md.immutable: true
       oneOf:
-      - title: Single Instance
-        const: BASIC
-      - title: Highly Available
-        const: STANDARD_HA
-    read_replicas:
-      type: integer
-      title: Read Replicas
-      description: Number of read replicas to provision. Must be an integer between 1 and 5.
-      minimum: 1
-      maximum: 5
-      default: 1
+        - title: Single Instance
+          const: BASIC
+        - title: Highly Available
+          const: STANDARD_HA
+  dependencies:
+    tier:
+      oneOf:
+        - properties:
+            tier:
+              title: Tier
+              oneOf:
+                - title: Highly Available
+                  const: STANDARD_HA
+            read_replicas:
+              type: integer
+              title: Read Replicas
+              description: Number of read replicas to provision. Must be an integer between 1 and 5.
+              minimum: 1
+              maximum: 5
+              default: 1
+        - properties:
+            tier:
+              title: Tier
+              default: BASIC
+              $md.immutable: true
+              oneOf:
+                - title: Single Instance
+                  const: BASIC
 
 connections:
   required:
