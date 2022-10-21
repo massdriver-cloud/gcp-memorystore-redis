@@ -8,10 +8,10 @@ type: bundle
 params:
   examples:
     - __name: Development
-      tier: single-instance
+      tier: BASIC
       memory_size_gb: 10
     - __name: Production
-      tier: standard-ha
+      tier: STANDARD_HA
       memory_size_gb: 100
       read_replicas: 2
   required:
