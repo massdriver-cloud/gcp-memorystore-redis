@@ -1,8 +1,6 @@
 locals {
-  connect_mode = true ? "PRIVATE_SERVICE_ACCESS" : "DIRECT_PEERING"
-
-  tier                = var.tier == "Single Instance" ? "BASIC" : "STANDARD_HA"
-  is_highly_available = local.tier == "STANDARD_HA"
+  connect_mode        = true ? "PRIVATE_SERVICE_ACCESS" : "DIRECT_PEERING"
+  is_highly_available = var.tier == "STANDARD_HA"
 
   version_map = {
     "3.2" = "REDIS_3_2"
@@ -16,7 +14,7 @@ resource "google_redis_instance" "redis" {
   provider       = google-beta
   name           = var.md_metadata.name_prefix
   labels         = var.md_metadata.default_tags
-  tier           = local.tier
+  tier           = var.tier
   memory_size_gb = var.memory_size_gb
 
   region = var.subnetwork.specs.gcp.region

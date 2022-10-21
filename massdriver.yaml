@@ -46,9 +46,9 @@ params:
       $md.immutable: true
       oneOf:
       - title: Single Instance
-        const: single-instance
+        const: BASIC
       - title: Highly Available
-        const: standard-ha
+        const: STANDARD_HA
     read_replicas:
       type: integer
       title: Read Replicas
