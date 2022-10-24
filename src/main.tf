@@ -1,5 +1,5 @@
 locals {
-  is_highly_available = var.tier == "STANDARD_HA"
+  is_highly_available = var.availability.tier == "STANDARD_HA"
 
   version_map = {
     "3.2" = "REDIS_3_2"
@@ -13,7 +13,7 @@ resource "google_redis_instance" "redis" {
   provider       = google-beta
   name           = var.md_metadata.name_prefix
   labels         = var.md_metadata.default_tags
-  tier           = var.tier
+  tier           = var.availability.tier
   memory_size_gb = var.memory_size_gb
 
   region = var.subnetwork.specs.gcp.region
@@ -25,7 +25,7 @@ resource "google_redis_instance" "redis" {
   display_name  = var.md_metadata.name_prefix
 
   read_replicas_mode = local.is_highly_available ? "READ_REPLICAS_ENABLED" : null
-  replica_count      = local.is_highly_available ? var.read_replicas : null
+  replica_count      = local.is_highly_available ? var.availability.read_replicas : null
 
   # OSS Redis AUTH
   auth_enabled            = true
