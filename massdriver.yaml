@@ -17,7 +17,7 @@ params:
   required:
     - memory_size_gb
     - redis_version
-    - tier
+    - availability
   properties:
     memory_size_gb:
       type: integer
@@ -37,41 +37,38 @@ params:
         - "4.0"
         - "5.0"
         - "6.x"
-    tier:
-      type: string
-      title: Tier
-      description: Availability tier.
-      default: BASIC
-      $md.immutable: true
-      oneOf:
-        - title: Single Instance
-          const: BASIC
-        - title: Highly Available
-          const: STANDARD_HA
-  dependencies:
-    tier:
-      oneOf:
-        - properties:
-            tier:
-              title: Tier
-              oneOf:
-                - title: Highly Available
+    availability:
+      type: object
+      title: Availability
+      description: Configure your Redis instance to be Highly Available with read replicas, or as a single instance.
+      properties:
+        tier:
+          type: string
+          title: Availability Tier
+          default: BASIC
+          $md.immutable: true
+          oneOf:
+            - title: Single Instance
+              const: BASIC
+            - title: Highly Available
+              const: STANDARD_HA
+      dependencies:
+        tier:
+          oneOf:
+            - properties:
+                tier:
                   const: STANDARD_HA
-            read_replicas:
-              type: integer
-              title: Read Replicas
-              description: Number of read replicas to provision. Must be an integer between 1 and 5.
-              minimum: 1
-              maximum: 5
-              default: 1
-        - properties:
-            tier:
-              title: Tier
-              default: BASIC
-              $md.immutable: true
-              oneOf:
-                - title: Single Instance
+                read_replicas:
+                  type: integer
+                  title: Read Replicas
+                  description: Number of read replicas to provision. Must be an integer between 1 and 5.
+                  minimum: 1
+                  maximum: 5
+                  default: 1
+            - properties:
+                tier:
                   const: BASIC
+
 
 connections:
   required:
