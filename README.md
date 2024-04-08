@@ -29,23 +29,6 @@ Bundles are the basic building blocks of infrastructure, applications, and archi
 
 ## Bundle
 
-
-<!-- COMPLIANCE:START -->
-
-Security and compliance scanning of our bundles is performed using [Bridgecrew](https://www.bridgecrew.cloud/). Massdriver also offers security and compliance scanning of operational infrastructure configured and deployed using the platform.
-
-| Benchmark | Description |
-|--------|---------------|
-| [![Infrastructure Security](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/gcp-memorystore-redis/general)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Fgcp-memorystore-redis&benchmark=INFRASTRUCTURE+SECURITY) | Infrastructure Security Compliance |
-| [![CIS GCP](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/gcp-memorystore-redis/cis_gcp)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Fgcp-memorystore-redis&benchmark=CIS+GCP+V1.1) | Center for Internet Security, GCP Compliance |
-| [![PCI-DSS](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/gcp-memorystore-redis/pci)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Fgcp-memorystore-redis&benchmark=PCI-DSS+V3.2) | Payment Card Industry Data Security Standards Compliance |
-| [![NIST-800-53](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/gcp-memorystore-redis/nist)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Fgcp-memorystore-redis&benchmark=NIST-800-53) | National Institute of Standards and Technology Compliance |
-| [![ISO27001](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/gcp-memorystore-redis/iso)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Fgcp-memorystore-redis&benchmark=ISO27001) | Information Security Management System, ISO/IEC 27001 Compliance |
-| [![SOC2](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/gcp-memorystore-redis/soc2)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Fgcp-memorystore-redis&benchmark=SOC2)| Service Organization Control 2 Compliance |
-| [![HIPAA](https://www.bridgecrew.cloud/badges/github/massdriver-cloud/gcp-memorystore-redis/hipaa)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=massdriver-cloud%2Fgcp-memorystore-redis&benchmark=HIPAA) | Health Insurance Portability and Accountability Compliance |
-
-<!-- COMPLIANCE:END -->
-
 ### Params
 
 Form input parameters for configuring a bundle for deployment.
@@ -56,18 +39,20 @@ Form input parameters for configuring a bundle for deployment.
 <!-- PARAMS:START -->
 ## Properties
 
-- **`memory_size_gb`** *(integer)*: Memory size of the Redis instance (in GB). Must be an integer between 5 and 300. Minimum: `5`. Maximum: `300`.
-- **`read_replicas`** *(integer)*: Number of read replicas to provision. Must be an integer between 1 and 5. Minimum: `1`. Maximum: `5`.
-- **`redis_version`** *(string)*: Major Redis version to use. Must be one of: `['3.2', '4.0', '5.0', '6.x']`.
-- **`tier`** *(string)*: Availability tier. Must be one of: `['Single Instance', 'Highly Available']`.
+- **`availability`** *(object)*: Configure your Redis instance to be Highly Available with read replicas, or as a single instance.
+  - **`tier`** *(string)*: Default: `BASIC`.
+    - **One of**
+      - Single Instance
+      - Highly Available
+- **`memory_size_gb`** *(integer)*: Memory size of the Redis instance (in GB). Must be an integer between 5 and 300. Minimum: `5`. Maximum: `300`. Default: `5`.
+- **`redis_version`** *(string)*: Major Redis version to use. Must be one of: `['3.2', '4.0', '5.0', '6.x']`. Default: `6.x`.
 ## Examples
 
   ```json
   {
       "__name": "Development",
       "memory_size_gb": 10,
-      "redis_version": "6.x",
-      "tier": "Single Instance"
+      "tier": "BASIC"
   }
   ```
 
@@ -76,8 +61,7 @@ Form input parameters for configuring a bundle for deployment.
       "__name": "Production",
       "memory_size_gb": 100,
       "read_replicas": 2,
-      "redis_version": "6.x",
-      "tier": "Highly Available"
+      "tier": "STANDARD_HA"
   }
   ```
 
@@ -160,18 +144,37 @@ Connections from other bundles that this bundle depends on.
   - **`specs`** *(object)*
     - **`gcp`** *(object)*: .
       - **`project`** *(string)*
-      - **`region`** *(string)*: GCP region. Must be one of: `['us-east1', 'us-east4', 'us-west1', 'us-west2', 'us-west3', 'us-west4', 'us-central1']`.
+      - **`region`** *(string)*: The GCP region to provision resources in.
 
         Examples:
+        ```json
+        "us-east1"
+        ```
+
+        ```json
+        "us-east4"
+        ```
+
+        ```json
+        "us-west1"
+        ```
+
         ```json
         "us-west2"
         ```
 
-      - **`resource`** *(string)*
-      - **`service`** *(string)*
-      - **`zone`** *(string)*: GCP Zone.
+        ```json
+        "us-west3"
+        ```
 
-        Examples:
+        ```json
+        "us-west4"
+        ```
+
+        ```json
+        "us-central1"
+        ```
+
 - **`subnetwork`** *(object)*: A region-bound network for deploying GCP resources. Cannot contain additional properties.
   - **`data`** *(object)*
     - **`infrastructure`** *(object)*
@@ -240,21 +243,67 @@ Connections from other bundles that this bundle depends on.
         "projects/my-project/locations/us-west2/clusters/my-gke-cluster"
         ```
 
+      - **`vpc_access_connector`** *(string)*: GCP Resource Name (GRN).
+
+        Examples:
+        ```json
+        "projects/my-project/global/networks/my-global-network"
+        ```
+
+        ```json
+        "projects/my-project/regions/us-west2/subnetworks/my-subnetwork"
+        ```
+
+        ```json
+        "projects/my-project/topics/my-pubsub-topic"
+        ```
+
+        ```json
+        "projects/my-project/subscriptions/my-pubsub-subscription"
+        ```
+
+        ```json
+        "projects/my-project/locations/us-west2/instances/my-redis-instance"
+        ```
+
+        ```json
+        "projects/my-project/locations/us-west2/clusters/my-gke-cluster"
+        ```
+
   - **`specs`** *(object)*
     - **`gcp`** *(object)*: .
       - **`project`** *(string)*
-      - **`region`** *(string)*: GCP region. Must be one of: `['us-east1', 'us-east4', 'us-west1', 'us-west2', 'us-west3', 'us-west4', 'us-central1']`.
+      - **`region`** *(string)*: The GCP region to provision resources in.
 
         Examples:
+        ```json
+        "us-east1"
+        ```
+
+        ```json
+        "us-east4"
+        ```
+
+        ```json
+        "us-west1"
+        ```
+
         ```json
         "us-west2"
         ```
 
-      - **`resource`** *(string)*
-      - **`service`** *(string)*
-      - **`zone`** *(string)*: GCP Zone.
+        ```json
+        "us-west3"
+        ```
 
-        Examples:
+        ```json
+        "us-west4"
+        ```
+
+        ```json
+        "us-central1"
+        ```
+
 <!-- CONNECTIONS:END -->
 
 </details>
@@ -330,7 +379,7 @@ Resources created by this bundle that can be connected to other bundles.
       - **Any of**
         - AWS Security information*object*: Informs downstream services of network and/or IAM policies. Cannot contain additional properties.
           - **`iam`** *(object)*: IAM Policies. Cannot contain additional properties.
-            - **`^[a-z-/]+$`** *(object)*
+            - **`^[a-z]+[a-z_]*[a-z]+$`** *(object)*
               - **`policy_arn`** *(string)*: AWS IAM policy ARN.
 
                 Examples:
@@ -341,6 +390,18 @@ Resources created by this bundle that can be connected to other bundles.
                 ```json
                 "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
                 ```
+
+          - **`identity`** *(object)*: For instances where IAM policies must be attached to a role attached to an AWS resource, for instance AWS Eventbridge to Firehose, this attribute should be used to allow the downstream to attach it's policies (Firehose) directly to the IAM role created by the upstream (Eventbridge). It is important to remember that connections in massdriver are one way, this scheme perserves the dependency relationship while allowing bundles to control the lifecycles of resources under it's management. Cannot contain additional properties.
+            - **`role_arn`** *(string)*: ARN for this resources IAM Role.
+
+              Examples:
+              ```json
+              "arn:aws:rds::ACCOUNT_NUMBER:db/prod"
+              ```
+
+              ```json
+              "arn:aws:ec2::ACCOUNT_NUMBER:vpc/vpc-foo"
+              ```
 
           - **`network`** *(object)*: AWS security group rules to inform downstream services of ports to open for communication. Cannot contain additional properties.
             - **`^[a-z-]+$`** *(object)*
@@ -359,7 +420,7 @@ Resources created by this bundle that can be connected to other bundles.
               - **`protocol`** *(string)*: Must be one of: `['tcp', 'udp']`.
         - Security*object*: GCP Security Configuration. Cannot contain additional properties.
           - **`iam`** *(object)*: IAM Roles And Conditions. Cannot contain additional properties.
-            - **`^[a-z-/]+$`** *(object)*
+            - **`^[a-z]+[a-z_]*[a-z]$`** *(object)*
               - **`condition`** *(string)*: GCP IAM Condition.
               - **`role`**: GCP Role.
 
@@ -382,7 +443,7 @@ Resources created by this bundle that can be connected to other bundles.
 
         - Security*object*: Azure Security Configuration. Cannot contain additional properties.
           - **`iam`** *(object)*: IAM Roles And Scopes. Cannot contain additional properties.
-            - **`^[a-z/-]+$`** *(object)*
+            - **`^[a-z]+[a-z_]*[a-z]$`** *(object)*
               - **`role`**: Azure Role.
 
                 Examples:
@@ -392,6 +453,16 @@ Resources created by this bundle that can be connected to other bundles.
 
               - **`scope`** *(string)*: Azure IAM Scope.
   - **`specs`** *(object)*
+    - **`aws`** *(object)*: .
+      - **`region`** *(string)*: AWS Region to provision in.
+
+        Examples:
+        ```json
+        "us-west-2"
+        ```
+
+    - **`azure`** *(object)*: .
+      - **`region`** *(string)*: Select the Azure region you'd like to provision your resources in.
     - **`cache`** *(object)*: The root schema comprises the entire JSON document.
       - **`engine`** *(string)*: The cache engine. Default: ``.
 
@@ -415,6 +486,39 @@ Resources created by this bundle that can be connected to other bundles.
           "version": "6.2"
       }
       ```
+
+    - **`gcp`** *(object)*: .
+      - **`project`** *(string)*
+      - **`region`** *(string)*: The GCP region to provision resources in.
+
+        Examples:
+        ```json
+        "us-east1"
+        ```
+
+        ```json
+        "us-east4"
+        ```
+
+        ```json
+        "us-west1"
+        ```
+
+        ```json
+        "us-west2"
+        ```
+
+        ```json
+        "us-west3"
+        ```
+
+        ```json
+        "us-west4"
+        ```
+
+        ```json
+        "us-central1"
+        ```
 
 <!-- ARTIFACTS:END -->
 
