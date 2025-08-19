@@ -3,7 +3,6 @@ name: gcp-memorystore-redis
 version: 1.0.0
 description: Provisions a low-latency, scalable, secure, and highly available in-memory Redis cluster in GCP.
 source_url: https://github.com/massdriver-cloud/gcp-memorystore-redis
-type: application
 params:
   examples:
   - __name: Development
