@@ -1,23 +1,22 @@
 schema: draft-07
 name: gcp-memorystore-redis
-description: "Provisions a low-latency, scalable, secure, and highly available in-memory Redis cluster in GCP."
-source_url: github.com/massdriver-cloud/gcp-memorystore-redis
-access: public
-type: bundle
-
+version: 1.0.0
+description: Provisions a low-latency, scalable, secure, and highly available in-memory Redis cluster in GCP.
+source_url: https://github.com/massdriver-cloud/gcp-memorystore-redis
+type: application
 params:
   examples:
-    - __name: Development
-      tier: BASIC
-      memory_size_gb: 10
-    - __name: Production
-      tier: STANDARD_HA
-      memory_size_gb: 100
-      read_replicas: 2
+  - __name: Development
+    tier: BASIC
+    memory_size_gb: 10
+  - __name: Production
+    tier: STANDARD_HA
+    memory_size_gb: 100
+    read_replicas: 2
   required:
-    - memory_size_gb
-    - redis_version
-    - availability
+  - memory_size_gb
+  - redis_version
+  - availability
   properties:
     memory_size_gb:
       type: integer
@@ -30,13 +29,13 @@ params:
       type: string
       title: Version
       description: Major Redis version to use
-      default: "6.x"
-      $md.immutable: true
+      default: 6.x
+      "$md.immutable": true
       enum:
-        - "3.2"
-        - "4.0"
-        - "5.0"
-        - "6.x"
+      - '3.2'
+      - '4.0'
+      - '5.0'
+      - 6.x
     availability:
       type: object
       title: Availability
@@ -46,51 +45,53 @@ params:
           type: string
           title: Availability Tier
           default: BASIC
-          $md.immutable: true
+          "$md.immutable": true
           oneOf:
-            - title: Single Instance
-              const: BASIC
-            - title: Highly Available
-              const: STANDARD_HA
+          - title: Single Instance
+            const: BASIC
+          - title: Highly Available
+            const: STANDARD_HA
       dependencies:
         tier:
           oneOf:
-            - properties:
-                tier:
-                  const: STANDARD_HA
-                read_replicas:
-                  type: integer
-                  title: Read Replicas
-                  description: Number of read replicas to provision. Must be an integer between 1 and 5.
-                  minimum: 1
-                  maximum: 5
-                  default: 1
-            - properties:
-                tier:
-                  const: BASIC
-
-
+          - properties:
+              tier:
+                const: STANDARD_HA
+              read_replicas:
+                type: integer
+                title: Read Replicas
+                description: Number of read replicas to provision. Must be an integer between 1 and 5.
+                minimum: 1
+                maximum: 5
+                default: 1
+          - properties:
+              tier:
+                const: BASIC
 connections:
   required:
-    - gcp_authentication
-    - subnetwork
+  - gcp_authentication
+  - subnetwork
   properties:
     gcp_authentication:
-      $ref: massdriver/gcp-service-account
+      "$ref": massdriver/gcp-service-account
     subnetwork:
-      $ref: massdriver/gcp-subnetwork
-
+      "$ref": massdriver/gcp-subnetwork
 artifacts:
   required:
-    - authentication
+  - authentication
   properties:
     authentication:
-      $ref: massdriver/redis-authentication
-
+      "$ref": massdriver/redis-authentication
 ui:
   ui:order:
-    - redis_version
-    - memory_size_gb
-    - tier
-    - read_replicas
-    - "*"
+  - redis_version
+  - memory_size_gb
+  - tier
+  - read_replicas
+  - "*"
+steps:
+- path: src
+  provisioner: opentofu
+  config:
+    checkov:
+      enable: true
