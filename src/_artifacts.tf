@@ -29,8 +29,7 @@ locals {
 }
 
 resource "massdriver_artifact" "authentication" {
-  field                = "authentication"
-  provider_resource_id = google_redis_instance.redis.id
-  name                 = "Redis Cluster: (${google_redis_instance.redis.id})"
-  artifact             = jsonencode(local.artifact_authentication)
+  field    = "authentication"
+  name     = "Redis Cluster: (${google_redis_instance.redis.id})"
+  artifact = jsonencode(local.artifact_authentication)
 }
