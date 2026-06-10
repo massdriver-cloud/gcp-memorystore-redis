@@ -72,15 +72,15 @@ connections:
   - subnetwork
   properties:
     gcp_authentication:
-      "$ref": massdriver/gcp-service-account
+      "$ref": gcp-service-account
     subnetwork:
-      "$ref": massdriver/gcp-subnetwork
+      "$ref": gcp-subnetwork
 artifacts:
   required:
   - authentication
   properties:
     authentication:
-      "$ref": massdriver/redis-authentication
+      "$ref": redis-authentication
 ui:
   ui:order:
   - redis_version
