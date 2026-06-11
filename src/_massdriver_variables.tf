@@ -50,13 +50,11 @@ variable "redis_version" {
 }
 variable "subnetwork" {
   type = object({
-    data = object({
-      infrastructure = object({
-        cidr                   = string
-        gcp_global_network_grn = string
-        grn                    = string
-        vpc_access_connector   = string
-      })
+    infrastructure = object({
+      cidr                   = string
+      gcp_global_network_grn = string
+      grn                    = string
+      vpc_access_connector   = string
     })
     specs = object({
       gcp = optional(object({

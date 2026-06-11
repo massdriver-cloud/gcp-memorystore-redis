@@ -18,7 +18,7 @@ resource "google_redis_instance" "redis" {
 
   region = var.subnetwork.specs.gcp.region
 
-  authorized_network = var.subnetwork.data.infrastructure.gcp_global_network_grn
+  authorized_network = var.subnetwork.infrastructure.gcp_global_network_grn
   connect_mode       = "PRIVATE_SERVICE_ACCESS"
 
   redis_version = local.version_map[var.redis_version]

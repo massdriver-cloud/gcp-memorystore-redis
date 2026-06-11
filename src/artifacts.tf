@@ -1,9 +1,9 @@
 locals {
-  data_infrastructure = {
+  infrastructure = {
     grn = google_redis_instance.redis.id
   }
 
-  data_authentication = {
+  authentication = {
     username = ""
     # the username above is intentially blank, this auth token can be used by itself
     password = google_redis_instance.redis.auth_string
@@ -17,11 +17,9 @@ locals {
   }
 
   artifact_authentication = {
-    data = {
-      infrastructure = local.data_infrastructure
-      authentication = local.data_authentication
-      security       = {}
-    }
+    infrastructure = local.infrastructure
+    authentication = local.authentication
+    security       = {}
     specs = {
       cache = local.specs_cache
     }
